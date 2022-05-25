@@ -31,45 +31,45 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
       await client.connect();
-      const tvCollection = client.db("Warehouse").collection("service");
+      const carCollection = client.db("Warehouse").collection("service");
   
       //create
-      app.post("/tv", async (req, res) => {
+      app.post("/car", async (req, res) => {
         const newItem = req.body;
-        const result = await tvCollection.insertOne(newItem);
+        const result = await carCollection.insertOne(newItem);
         res.send(result);
       });
   
       // Read
-      app.get("/tv", async (req, res) => {
+      app.get("/car", async (req, res) => {
         const query = {};
-        const cursor = tvCollection.find(query);
-        const tvs = await cursor.toArray();
-        res.send(tvs);
+        const cursor = carCollection.find(query);
+        const cars = await cursor.toArray();
+        res.send(cars);
       });
   
-      app.get("/usertv", verifyJWT, async (req, res) => {
+      app.get("/userCar", verifyJWT, async (req, res) => {
         const decodedEmail = req.decoded.email;
   
         const email = req.query.email;
         if (decodedEmail === email) {
           const query = { email: email };
-          const cursor = tvCollection.find(query);
-          const tvs = await cursor.toArray();
-          res.send(tvs);
+          const cursor = carCollection.find(query);
+          const cars = await cursor.toArray();
+          res.send(cars);
         }
         else{res.status(403).send({message:'forbidden access'})}
         
       });
   
-      app.get("/tv/:id", async (req, res) => {
+      app.get("/car/:id", async (req, res) => {
         const id = req.params.id;
         const query = { _id: ObjectId(id) };
-        const tv = await tvCollection.findOne(query);
-        res.send(tv);
+        const car = await carCollection.findOne(query);
+        res.send(car);
       });
       //update
-      app.put("/tv/:id", async (req, res) => {
+      app.put("/car/:id", async (req, res) => {
         const id = req.params.id;
         const newQuantity = req.body;
         const filter = { _id: ObjectId(id) };
@@ -79,7 +79,7 @@ async function run() {
             quantity: newQuantity.quantity,
           },
         };
-        const result = await tvCollection.updateOne(
+        const result = await carCollection.updateOne(
           filter,
           updatedQuantity,
           options
@@ -88,10 +88,10 @@ async function run() {
       });
   
       //delete
-      app.delete("/tv/:id", async (req, res) => {
+      app.delete("/car/:id", async (req, res) => {
         const id = req.params.id;
         const query = { _id: ObjectId(id) };
-        const result = await tvCollection.deleteOne(query);
+        const result = await carCollection.deleteOne(query);
         res.send(result);
       });
   
