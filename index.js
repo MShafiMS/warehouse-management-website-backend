@@ -11,6 +11,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
+
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -31,7 +33,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
   try {
     await client.connect();
-    const carCollection = client.db("marcedex-warehouse").collection("cars");
+    const carCollection = client.db("Warehouse").collection("service");
 
     //create
     app.post("/car", async (req, res) => {
@@ -48,7 +50,7 @@ async function run() {
       res.send(cars);
     });
 
-    app.get("/userCar", verifyJWT, async (req, res) => {
+    app.get("/myinventories", verifyJWT, async (req, res) => {
       const decodedEmail = req.decoded.email;
 
       const email = req.query.email;
@@ -114,5 +116,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("listening to ");
+  console.log("listening to", port);
 });
